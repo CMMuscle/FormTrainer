@@ -214,7 +214,7 @@ struct MainDataView: View {
         }
         
         // ナビゲーションリンクの遷移先のバーを隠す
-        .navigationBarBackButtonHidden(true)
+        
 //         ナビゲーションバーを編集する
         .toolbar {
             ToolbarItem(placement: .navigationBarLeading) {
@@ -223,7 +223,7 @@ struct MainDataView: View {
                         action: {
                             dismiss()
                         }, label: {
-                            Text("＜")
+                            Text("＜ホーム")
                                 .foregroundColor(.white)
                                 .font(.title)
                         }
@@ -237,6 +237,7 @@ struct MainDataView: View {
 
                 Spacer()
             }
+
         }
     }
     

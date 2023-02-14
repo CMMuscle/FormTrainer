@@ -298,7 +298,26 @@ struct InitialView: View {
             }
         }
         .ignoresSafeArea(.keyboard, edges: .bottom)
-       
+        
+        .onAppear {
+            if viewModel.startFirst {
+                if let picture = menuViewModel.datas!.date.week[menuViewModel.datas!.date.week.count - 1].user.pictureData.startDownloadURL {
+                    print("ytfkugilhoj;")
+                    viewModel.downloadImageAsync(url: picture) { image in
+                        self.viewModel.startFilteredImage = image
+                    }
+                }
+                
+            }
+            if viewModel.nowFirst {
+                if let picture = menuViewModel.datas!.date.week[menuViewModel.datas!.date.week.count - 1].user.pictureData.nowDownloadURL {
+                    viewModel.downloadImageAsync(url: picture) { image in
+                        self.viewModel.nowFilteredImage = image
+                    }
+                }
+            }
+            
+        }
         .actionSheet(isPresented: $viewModel.isShowActionSheet){
             actionSheet
         }

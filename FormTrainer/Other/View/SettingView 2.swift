@@ -15,7 +15,6 @@ struct SettingView: View {
     @ObservedObject var menuViewModel: MenuViewModel
     @StateObject var initalViewModel = InitialViewModel()
     @State var showing: AlertItem?
-    @Environment(\.dismiss) var dismiss
     var body: some View {
         ZStack {
             
@@ -51,7 +50,6 @@ struct SettingView: View {
                         .onTapGesture {
                             showing = AlertItem(alert: Alert(title: Text("リセットしますか?"), message: Text("今までのトレーニング統計やランクがリセットされます"), primaryButton: .cancel(Text("キャンセル")), secondaryButton: .destructive(Text("リセット"), action: {
                                 initalViewModel.registrationUser(menuViewModel: menuViewModel, name: menuViewModel.datas!.date.week[0].user.name, weight: menuViewModel.datas!.date.week[menuViewModel.datas!.date.week.count - 1].user.weight[menuViewModel.datas!.date.week[menuViewModel.datas!.date.week.count - 1].user.weight.count - 1].weight, fat: menuViewModel.datas!.date.week[menuViewModel.datas!.date.week.count - 1].user.peopleFat[menuViewModel.datas!.date.week[menuViewModel.datas!.date.week.count - 1].user.peopleFat.count - 1].peopleFat, startImage: menuViewModel.datas!.date.week[menuViewModel.datas!.date.week.count - 1].user.pictureData.startDownloadURL, viewModel: FilterContentViewModel())
-                                menuViewModel.todayCount = [NowCount(id: UUID(), menuName: "プランク", Count: 0),NowCount(id: UUID(), menuName: "バックスクワット", Count: 0),NowCount(id: UUID(), menuName: "腹筋", Count: 0),NowCount(id: UUID(), menuName: "サイドプランク", Count: 0),NowCount(id: UUID(), menuName: "背筋", Count: 0),NowCount(id: UUID(), menuName: "腕立て", Count: 0)]
                                 showing = AlertItem(alert: Alert(title: Text("リセットしました"), dismissButton: .default(Text("OK"))))
                             })))
                         }
@@ -82,32 +80,6 @@ struct SettingView: View {
             .padding(EdgeInsets(top: settingViewModel.screen.height * 0.035, leading: 0, bottom: 0, trailing: 0))
             
             .background(Color(red: 0.43, green: 0.43, blue: 0.43))
-        }
-        // ナビゲーションリンクの遷移先のバーを隠す
-        .navigationBarBackButtonHidden(true)
-//         ナビゲーションバーを編集する
-        .toolbar {
-            ToolbarItem(placement: .navigationBarLeading) {
-                HStack {
-                    Button(
-                        action: {
-                            dismiss()
-                        }, label: {
-                            Text("＜")
-                                .foregroundColor(.white)
-                                .font(.title)
-                        }
-                    )
-                }
-            }
-            ToolbarItem(placement: .principal) {
-                Text("設定")
-                    .foregroundColor(.white)
-                    .font(.largeTitle)
-
-                Spacer()
-            }
-
         }
     }
 }

@@ -12,11 +12,8 @@ struct TrainingView: View {
     @Environment(\.dismiss) var dismiss
     let screen = UIScreen.main.bounds
     let trainingName: String
-    
-    @ObservedObject var menuViewModel: MenuViewModel
     @StateObject var trainingViewModel = TrainingViewModel()
-    
-    @State var showingView = false
+    @ObservedObject var menuViewModel: MenuViewModel
     
     var body: some View {
         ZStack {
@@ -130,7 +127,7 @@ struct TrainingView: View {
                     }
                     .frame(width: screen.width * 0.84, height: screen.height * 0.27)
                     .onTapGesture {
-                        trainingViewModel.pauseTraining()
+                        trainingViewModel.trainingSucess = 1
                     }
                 } else if trainingViewModel.trainingSucess == 1 {
                     ZStack {
@@ -147,7 +144,7 @@ struct TrainingView: View {
                     }
                     .frame(width: screen.width * 0.84, height: screen.height * 0.27)
                     .onTapGesture {
-                        trainingViewModel.pauseTraining()
+                        trainingViewModel.trainingSucess = 0
                     }
                 } else if trainingViewModel.trainingSucess == 2 {
                     ZStack {
@@ -179,25 +176,11 @@ struct TrainingView: View {
                             .shadow(color: Color.black.opacity(0.1), radius: 10, x: 0, y: 0)
                         
                         VStack {
-                            Spacer()
-                            
-                                Button {
-                                    showingView = true
-                                } label: {
-                                    Text("グラフ閲覧")
-                                        .font(.title)
-                                        .foregroundColor(.white)
-                                }
-
-                                
-                            
-                            Spacer()
+                           Text("グラフ閲覧")
                         }
                     }
-                    .fullScreenCover(isPresented: $showingView, content: {
-                        RecordView(menuViewModel: menuViewModel, showingView: $showingView)
-                    })
                     .frame(width: screen.width * 0.84, height: screen.height * 0.27)
+                    
                 }
                 
                 Spacer()
@@ -220,7 +203,6 @@ struct TrainingView: View {
                     }
                     .frame(width: screen.width * 0.84, height: screen.height * 0.27)
                     .onTapGesture {
-                        trainingViewModel.initViewModel(viewModel: menuViewModel)
                         trainingViewModel.training()
                     }
                     .padding()
@@ -287,12 +269,7 @@ struct TrainingView: View {
             }
         }
         .onAppear{
-//            trainingViewModel.init(viewModel: menuViewModel)
-            
             trainingViewModel.initMenu(countMenu: menuViewModel.trainingMaxCount, setMenu: menuViewModel.setMaxCount, menu: menuViewModel.menu, name: trainingName)
-            if trainingName == "バックスクワット" || trainingName == "サイドプランク" {
-                trainingViewModel.speeche(text: "左から始めます")
-            }
         }
         .navigationBarBackButtonHidden(true)
         .toolbar {
@@ -301,9 +278,8 @@ struct TrainingView: View {
                     Button(
                         action: {
                             dismiss()
-                            trainingViewModel.stopTraining()
                         }, label: {
-                            Text("＜")
+                            Text("＜ホーム")
                                 .foregroundColor(.white)
                                 .font(.title)
                         }
@@ -311,7 +287,7 @@ struct TrainingView: View {
                 }
             }
             ToolbarItem(placement: .principal) {
-                Text("トレーニング")
+                Text("統計")
                     .foregroundColor(.white)
                     .font(.largeTitle)
                 

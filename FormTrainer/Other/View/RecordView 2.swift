@@ -1,25 +1,22 @@
 //
-//  InitialView.swift
-//  FormTrainer
+//  RecordView.swift
+//  Muscle
 //
-//  Created by 稗田一亜 on 2023/02/03.
+//  Created by 稗田一亜 on 2023/01/11.
 //
 
 import SwiftUI
 import UIKit
 import Photos
 
-
-struct InitialView: View {
-    
+struct RecordView: View {
     @State var message = ""
     let screen = UIScreen.main.bounds
     @Environment(\.dismiss) var dismiss
+    @Environment(\.dismiss) var trainingDismiss: DismissAction
     @ObservedObject var menuViewModel: MenuViewModel
     @StateObject private var viewModel = FilterContentViewModel()
     @StateObject private var initialViewModel = InitialViewModel()
-    
-    @State var changed = false
     
     @State var source:UIImagePickerController.SourceType = .photoLibrary
     
@@ -31,12 +28,15 @@ struct InitialView: View {
     @State var weightRecord = ""
     @State var fatRecord = ""
     @FocusState var focus: Bool
-    let numText = "[0-9.]"
+    
+    @Binding var showingView: Bool
     
     var intFormatter: Formatter = NumberFormatter()
     
     @State var showing: AlertItem?
-
+    
+    let numText = "[0-9.]"
+    
     var body: some View {
         GeometryReader { _ in
             ZStack {
@@ -48,36 +48,6 @@ struct InitialView: View {
                     }
                 
                 VStack{
-                    
-                    ZStack {
-                        // ブロック背景
-                        RoundedRectangle(cornerRadius: 20)
-                            .fill(Color(red: 0.49, green: 0.49, blue: 0.49))
-                            .frame(width: screen.width * 0.84,
-                                   height: screen.height * 0.05)
-                            .focused(self.$focus)
-                            .onTapGesture {
-                                focus = false
-                            }
-                        HStack {
-                            Text("名前")
-                                .foregroundColor(.white)
-                                .padding(EdgeInsets(top: 0, leading: screen.width * 0.11, bottom: 0, trailing: 0))
-                                .focused(self.$focus)
-                                .onTapGesture {
-                                    focus = false
-                                }
-                            
-                            TextField("山田　太郎", text: $nameRecord)
-                                .ignoresSafeArea(.keyboard, edges: .bottom)
-                                .multilineTextAlignment(.trailing)
-                                .focused(self.$focus)
-                                .padding(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: screen.width * 0.11))
-                            
-                            
-                        }
-                    }
-                    .padding(EdgeInsets(top: screen.height * 0.035, leading: 0, bottom: 0, trailing: 0))
                     
                     //体重
                     ZStack {
@@ -110,6 +80,7 @@ struct InitialView: View {
                                 }
                         }
                     }
+                    .padding(EdgeInsets(top: screen.height * 0.035, leading: 0, bottom: 0, trailing: 0))
                     //体脂肪率
                     ZStack {
                         // ブロック背景
@@ -146,16 +117,11 @@ struct InitialView: View {
                     
                     //写真
                     ZStack {
-                        
-                        
                         // ブロック背景
                         RoundedRectangle(cornerRadius: 20)
                             .fill(Color(red: 0.49, green: 0.49, blue: 0.49))
                             .frame(width: screen.width * 0.84,
                                    height: screen.height * 0.5)
-                            .onTapGesture {
-                                focus = false
-                            }
                         
                         VStack{
                             HStack{
@@ -163,9 +129,6 @@ struct InitialView: View {
                                     .padding()
                                     .foregroundColor(.white)
                                     .frame(width: screen.width * 0.25)
-                                    .onTapGesture {
-                                        focus = false
-                                    }
                             }
                             
                             
@@ -179,67 +142,61 @@ struct InitialView: View {
                                             Image(uiImage: filterdImage)
                                                 .resizable()
                                                 .aspectRatio(contentMode: .fit)
-                                                .onTapGesture {
-                                                    focus = false
-                                                    viewModel.filterImage = false
-                                                    viewModel.isShowActionSheet = true
-                                                }
+                                            
                                             
                                         } else {
-                                            if !viewModel.startFirst {
-                                                Button("写真追加"){
-                                                    focus = false
-                                                    viewModel.filterImage = false
-                                                    viewModel.isShowActionSheet = true
-                                                }
-                                                .font(.largeTitle)
-                                                .foregroundColor(.white)
+                                            ProgressView()
                                                 .frame(width: screen.width * 0.34, height: screen.height * 0.32)
-                                            } else {
-                                                ProgressView()
-                                                    .frame(width: screen.width * 0.34, height: screen.height * 0.32)
-                                                    .onTapGesture {
-                                                        focus = false
-                                                    }
-                                            }
                                         }
-                                        
-                                        
                                     }
+                                    
                                     Text("開始時の体型")
                                         .foregroundColor(.white)
-                                        .onTapGesture {
-                                            focus = false
-                                        }
+                                    
                                 }
+                                
+                                
                                 
                                 Spacer()
                                 
                                 VStack{
                                     ZStack{
-                                        Text("写真なし")
-                                            .font(.largeTitle)
-                                            .foregroundColor(.white)
-                                            .frame(width: screen.width * 0.34, height: screen.height * 0.32)
-                                            .onTapGesture {
-                                                focus = false
+                                        if let filterdImage = viewModel.nowFilteredImage {
+                                            Image(uiImage: filterdImage)
+                                                .resizable()
+                                                .aspectRatio(contentMode: .fit)
+                                                .onTapGesture {
+                                                    viewModel.filterImage = true
+                                                    viewModel.isShowActionSheet = true
+                                                }
+                                            
+                                        } else {
+                                            if !viewModel.nowFirst {
+                                                Button("写真追加"){
+                                                    viewModel.filterImage = true
+                                                    viewModel.isShowActionSheet = true
+                                                }
+                                                .frame(width: screen.width * 0.34, height: screen.height * 0.32)
+                                                .font(.largeTitle)
+                                                .foregroundColor(.white)
+                                            } else {
+                                                ProgressView()
+                                                    .frame(width: screen.width * 0.34, height: screen.height * 0.32)
                                             }
+                                        }
                                     }
                                     
                                     Text("現在の体型")
                                         .foregroundColor(.white)
-                                        .onTapGesture {
-                                            focus = false
-                                        }
                                 }
                                 Spacer()
                             }
-                            
                         }
-                        .frame(width: screen.width * 0.84,
-                               height: screen.height * 0.5)
-                        .padding()
+                        
                     }
+                    .frame(width: screen.width * 0.84,
+                           height: screen.height * 0.5)
+                    .padding()
                     
                     Spacer()
                     
@@ -254,51 +211,77 @@ struct InitialView: View {
                             }
                         HStack {
                             Spacer()
-                            if changed {
-                                ProgressView()
-                            } else {
-                                Button("保存") {
-                                    focus = false
-                                    if !weightRecord.isEmpty && !fatRecord.isEmpty {
-                                        if weightRecord.range(of: numText, options: .regularExpression, range: nil, locale: nil) != nil && fatRecord.range(of: numText, options: .regularExpression, range: nil, locale: nil) != nil {
-                                            
-                                            
-                                            print("1")
-                                            viewModel.UploadImage(menuViewModel: menuViewModel)
-                                            print("2")
-                                            changed = true
-                                            initialViewModel.registrationUser(menuViewModel: menuViewModel, name: nameRecord, weight: Double(weightRecord)!, fat: Double(fatRecord)!, startImage: viewModel.startImage, viewModel: viewModel)
-                                            changed = false
-                                            
-                                            
-                                            print("3")
-                                            viewModel.startFirst = true
-                                        } else {
-                                            showing = AlertItem(alert: Alert(title: Text("不適切な値が入っています")))
-                                        }
-                                    } else {
-                                        
-                                    }
+                            Button("保存") {
+                                focus = false
+                                if weightRecord != "" || fatRecord != "" {
+                                    viewModel.UploadImage(menuViewModel: menuViewModel)
+                                    menuViewModel.statusAdd(weight: Double(weightRecord)!, fat: Double(fatRecord)!)
+                                    viewModel.startFirst = true
+                                    viewModel.nowFirst = true
+                                    showingView = false
+                                } else {
+                                    
                                 }
-                                .alert(item: $showing) { alert in
-                                    alert.alert
-                                }
-                                .foregroundColor(.white)
                             }
                             
+                            .foregroundColor(.white)
                             Spacer()
                         }
                     }
-                    .ignoresSafeArea(.keyboard, edges: .bottom)
                     .padding(EdgeInsets(top: 0, leading: 0, bottom: 50, trailing: 0))
+                    
                 }
                 
                 
-                
             }
+            
         }
+        .navigationBarBackButtonHidden(true)
+        .toolbar {
+            ToolbarItem(placement: .navigationBarLeading) {
+                HStack {
+                    Button(
+                        action: {
+                            dismiss()
+                        }, label: {
+                            Text("＜")
+                                .foregroundColor(.white)
+                                .font(.title)
+                        }
+                    )
+                }
+            }
+            ToolbarItem(placement: .principal) {
+                Text("記録入力")
+                    .foregroundColor(.white)
+                    .font(.largeTitle)
+
+                Spacer()
+            }
+
+        }
+        
         .ignoresSafeArea(.keyboard, edges: .bottom)
-       
+        
+        .onAppear {
+            if viewModel.startFirst {
+                if let picture = menuViewModel.datas!.date.week[menuViewModel.datas!.date.week.count - 1].user.pictureData.startDownloadURL {
+                    print("ytfkugilhoj;")
+                    viewModel.downloadImageAsync(url: picture) { image in
+                        self.viewModel.startFilteredImage = image
+                    }
+                }
+               
+            }
+            if viewModel.nowFirst {
+                if let picture = menuViewModel.datas!.date.week[menuViewModel.datas!.date.week.count - 1].user.pictureData.nowDownloadURL {
+                    viewModel.downloadImageAsync(url: picture) { image in
+                        self.viewModel.nowFilteredImage = image
+                    }
+                }
+            }
+            
+        }
         .actionSheet(isPresented: $viewModel.isShowActionSheet){
             actionSheet
         }
@@ -334,3 +317,4 @@ struct InitialView: View {
         return actionSheet
     }
 }
+
