@@ -109,6 +109,9 @@ struct SettingView: View {
             }
 
         }
+        .onAppear {
+            menuViewModel.loadData()
+        }
     }
 }
 

@@ -58,7 +58,7 @@ class TrainingViewModel: ObservableObject {
     // 音声
     private var speechSynthesizer : AVSpeechSynthesizer!
     
-    @Published var sensor: [(menuName: String, maxSensor: Double, minSensor: Double)] = [("プランク", -0.08, -0.12),("腹筋", 0.22, 0.62),("背筋", 0.91, 0.89),("腕立て", 0.0, -0.59)]
+    @Published var sensor: [(menuName: String, maxSensor: Double, minSensor: Double)] = [("プランク", -0.08, -0.12),("腹筋",0.62 , 0.22),("背筋", 0.89, 0.91),("腕立て", 0.0, -0.59)]
     
     @Published var backSquat: (menuName: String, minLeftSensor: Double, maxLeftSensor: Double, minRightSensor: Double, maxRightSensor: Double) = ("バックスクワット", 0.28, 0.77, 0.69, 0.76)
     

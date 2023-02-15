@@ -149,14 +149,14 @@ class MenuViewModel: ObservableObject {
     
     func dayReset() {
         let day = Calendar.current.component(.day, from: Date())
-//        if day != self.day {
+        if day != self.day {
             datas!.nowCount = [NowCount(id: UUID(), menuName: "プランク", Count: 0),NowCount(id: UUID(), menuName: "バックスクワット", Count: 0),NowCount(id: UUID(), menuName: "腹筋", Count: 0),NowCount(id: UUID(), menuName: "サイドプランク", Count: 0),NowCount(id: UUID(), menuName: "背筋", Count: 0),NowCount(id: UUID(), menuName: "腕立て", Count: 0)]
             addMovie(datas!)
             todayCount = datas!.nowCount
             self.day = day
-//        } else {
+        } else {
             todayCount = datas!.nowCount
-//        }
+        }
     }
     
     func subMenuLoad(menu: String) {
@@ -169,6 +169,7 @@ class MenuViewModel: ObservableObject {
     func loadData() {
         
         todayCount = datas!.nowCount
+        print("aaaaaaaaa\(todayCount)")
     }
     
     func finishRecord(menuName: String) {
