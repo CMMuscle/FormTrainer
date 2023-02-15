@@ -153,7 +153,7 @@ class TrainingViewModel: ObservableObject {
                 nowTrainingCount = Double(trainingMaxCount[trainingIndex!].value)
                 
                 nowSetCount = 1
-                
+                var time = 3
                 startTimer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { [self] _ in
                     time -= 1
                     self.speeche(text: String(time))
@@ -170,7 +170,7 @@ class TrainingViewModel: ObservableObject {
             } else {
                 nowTrainingCount = 0
                 nowSetCount = 1
-                var time = 3
+                var time = 5
                 startTimer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { [self] _ in
                     time -= 1
                     self.speeche(text: String(time))
