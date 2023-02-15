@@ -220,8 +220,10 @@ struct TrainingView: View {
                     }
                     .frame(width: screen.width * 0.84, height: screen.height * 0.27)
                     .onTapGesture {
-                        trainingViewModel.initViewModel(viewModel: menuViewModel)
-                        trainingViewModel.training()
+                        if !trainingViewModel.trainingNow {
+                            trainingViewModel.initViewModel(viewModel: menuViewModel)
+                            trainingViewModel.training()
+                        }
                     }
                     .padding()
                 } else if trainingViewModel.trainingSucess == 0 {

@@ -33,7 +33,6 @@
 		D099AD562980C6BD00C0E625 /* MainDataViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D099AD342980C6BC00C0E625 /* MainDataViewModel.swift */; };
 		D099AD572980C6BD00C0E625 /* MuscleData.swift in Sources */ = {isa = PBXBuildFile; fileRef = D099AD362980C6BC00C0E625 /* MuscleData.swift */; };
 		D099AD582980C6BD00C0E625 /* MissionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D099AD382980C6BC00C0E625 /* MissionView.swift */; };
-		D099AD592980C6BD00C0E625 /* RecordGraph.swift in Sources */ = {isa = PBXBuildFile; fileRef = D099AD392980C6BC00C0E625 /* RecordGraph.swift */; };
 		D099AD5A2980C6BD00C0E625 /* RecordView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D099AD3A2980C6BC00C0E625 /* RecordView.swift */; };
 		D099AD5B2980C6BD00C0E625 /* UserView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D099AD3B2980C6BC00C0E625 /* UserView.swift */; };
 		D099AD5C2980C6BD00C0E625 /* TrainingSettingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D099AD3C2980C6BC00C0E625 /* TrainingSettingView.swift */; };
@@ -72,7 +71,6 @@
 		D099AD342980C6BC00C0E625 /* MainDataViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainDataViewModel.swift; sourceTree = "<group>"; };
 		D099AD362980C6BC00C0E625 /* MuscleData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MuscleData.swift; sourceTree = "<group>"; };
 		D099AD382980C6BC00C0E625 /* MissionView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MissionView.swift; sourceTree = "<group>"; };
-		D099AD392980C6BC00C0E625 /* RecordGraph.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RecordGraph.swift; sourceTree = "<group>"; };
 		D099AD3A2980C6BC00C0E625 /* RecordView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RecordView.swift; sourceTree = "<group>"; };
 		D099AD3B2980C6BC00C0E625 /* UserView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserView.swift; sourceTree = "<group>"; };
 		D099AD3C2980C6BC00C0E625 /* TrainingSettingView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TrainingSettingView.swift; sourceTree = "<group>"; };
@@ -220,7 +218,6 @@
 				D099AD3F2980C6BC00C0E625 /* MainDataView.swift */,
 				D099AD412980C6BC00C0E625 /* MenuView.swift */,
 				D099AD382980C6BC00C0E625 /* MissionView.swift */,
-				D099AD392980C6BC00C0E625 /* RecordGraph.swift */,
 				D099AD3A2980C6BC00C0E625 /* RecordView.swift */,
 				D099AD402980C6BC00C0E625 /* SettingView.swift */,
 				D099AD3D2980C6BC00C0E625 /* SideMenuView.swift */,
@@ -331,7 +328,6 @@
 				D099AD522980C6BD00C0E625 /* ImagePicker.swift in Sources */,
 				D099AD4B2980C6BD00C0E625 /* TrainingView.swift in Sources */,
 				D0DE57FA298C9CE40055DCA9 /* InitialViewModel.swift in Sources */,
-				D099AD592980C6BD00C0E625 /* RecordGraph.swift in Sources */,
 				D099AD622980C6BD00C0E625 /* SubDataView.swift in Sources */,
 				D099AD462980C6BD00C0E625 /* ForgetViewModel.swift in Sources */,
 				D099AD552980C6BD00C0E625 /* ChangeAccountModel.swift in Sources */,

@@ -171,7 +171,6 @@ struct RecordView: View {
                                                 }
                                             
                                         } else {
-                                            if !viewModel.nowFirst {
                                                 Button("写真追加"){
                                                     viewModel.filterImage = true
                                                     viewModel.isShowActionSheet = true
@@ -179,10 +178,7 @@ struct RecordView: View {
                                                 .frame(width: screen.width * 0.34, height: screen.height * 0.32)
                                                 .font(.largeTitle)
                                                 .foregroundColor(.white)
-                                            } else {
-                                                ProgressView()
-                                                    .frame(width: screen.width * 0.34, height: screen.height * 0.32)
-                                            }
+                                            
                                         }
                                     }
                                     
@@ -219,9 +215,19 @@ struct RecordView: View {
                                     viewModel.startFirst = true
                                     viewModel.nowFirst = true
                                     showingView = false
+                                } else if viewModel.nowFilteredImage == nil {
+                                    DispatchQueue.main.asyncAfter ( deadline: DispatchTime.now() + 0.1) {
+                                        showing = AlertItem(alert: Alert(title: Text("画像を登録してください")))
+                                    }
                                 } else {
-                                    
+                                    print("aaaaaa")
+                                    DispatchQueue.main.asyncAfter ( deadline: DispatchTime.now() + 0.1) {
+                                        showing = AlertItem(alert: Alert(title: Text("体重、体脂肪の欄が空欄です")))
+                                    }
                                 }
+                            }
+                            .alert(item: $showing) { alert in
+                                alert.alert
                             }
                             
                             .foregroundColor(.white)
@@ -273,13 +279,7 @@ struct RecordView: View {
                 }
                
             }
-            if viewModel.nowFirst {
-                if let picture = menuViewModel.datas!.date.week[menuViewModel.datas!.date.week.count - 1].user.pictureData.nowDownloadURL {
-                    viewModel.downloadImageAsync(url: picture) { image in
-                        self.viewModel.nowFilteredImage = image
-                    }
-                }
-            }
+           
             
         }
         .actionSheet(isPresented: $viewModel.isShowActionSheet){
@@ -289,9 +289,6 @@ struct RecordView: View {
             ImagePicker(isShown: $viewModel.isShowImagePickerView,
                         image: $viewModel.image,
                         sourceType: viewModel.selectedSourceType)
-        }
-        .alert(isPresented: $viewModel.isShowAlert) {
-            Alert(title: Text(viewModel.alertTitle))
         }
     }
     

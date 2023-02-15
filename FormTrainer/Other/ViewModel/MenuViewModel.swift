@@ -16,11 +16,11 @@ class MenuViewModel: ObservableObject {
     let menu = ["プランク","バックスクワット","腹筋","サイドプランク","背筋","腕立て"]
     
     // "プランク","ブルガリアンスクワット","腹筋","サイドプランク","背筋","腕立て"
-    @Published var setMaxCount = [2, 5, 3, 3, 7, 3]
-    @Published var trainingMaxCount = [20, 10, 10, 10, 10, 10]
+    @Published var setMaxCount = [2, 5, 1, 3, 7, 3]
+    @Published var trainingMaxCount = [20, 10, 1, 10, 10, 10]
     
-    @Published var stringSetCount = ["2","5","3","3","7","3"]
-    @Published var stringTrainingCount = ["10","10","10","10","10","10"]
+    @Published var stringSetCount = ["2","5","1","3","7","3"]
+    @Published var stringTrainingCount = ["10","10","1","10","10","10"]
     
     private var db = Firestore.firestore()
     

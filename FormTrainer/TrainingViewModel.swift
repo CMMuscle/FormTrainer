@@ -16,7 +16,7 @@ class TrainingViewModel: ObservableObject {
     
     @Published var nowTrainingCount = 0.0
     @Published var nowSetCount = 0
-    @Published var interbalTime = 10
+    @Published var interbalTime = 30
     
     @Published var viewModel = MenuViewModel()
     
@@ -136,13 +136,10 @@ class TrainingViewModel: ObservableObject {
     
     func trainingMenu(name: String) {
         nowMenu = name
-        if nowMenu != "バックスクワット" {
+        if nowMenu != "バックスクワット" && nowMenu != "サイドプランク" {
             nowSensor = sensor.first(where: { $0.menuName == name })!
         }
-        
     }
-    
-    
     
     // トレーニング
     func training() {
@@ -158,6 +155,7 @@ class TrainingViewModel: ObservableObject {
                     time -= 1
                     self.speeche(text: String(time))
                     if time <= 0 {
+                        startTimer?.invalidate()
                         trainingSucess = 0
                         speeche(text: "スタート")
                         startQueuedUpdates()
@@ -165,8 +163,6 @@ class TrainingViewModel: ObservableObject {
                         trainingTime()
                     }
                 }
-                
-                
             } else {
                 nowTrainingCount = 0
                 nowSetCount = 1
@@ -175,6 +171,7 @@ class TrainingViewModel: ObservableObject {
                     time -= 1
                     self.speeche(text: String(time))
                     if time <= 0 {
+                        startTimer?.invalidate()
                         trainingSucess = 0
                         speeche(text: "スタート")
                         startQueuedUpdates()
@@ -184,6 +181,18 @@ class TrainingViewModel: ObservableObject {
                 }
             }
             
+        } else {
+            if self.nowMenu == "プランク" || self.nowMenu == "サイドプランク" {
+                nowTrainingCount = Double(trainingMaxCount[trainingIndex!].value)
+            } else {
+                nowTrainingCount = 0
+            }
+        
+            trainingSucess = 0
+            speeche(text: "スタート")
+            startQueuedUpdates()
+            speakTimes()
+            trainingTime()
         }
         
         
@@ -224,7 +233,10 @@ class TrainingViewModel: ObservableObject {
                     switch(self.sensorjudge){
                         
                     case true:
-                        if self.x >= self.nowSensor.maxSensor {
+                        break
+                        
+                    case false:
+                        if self.x <= self.nowSensor.minSensor {
                             //現在の回数(init:0) > 設定回数(test:3)
                             if Int(self.nowTrainingCount) >= Int(self.trainingMaxCount[self.trainingIndex!].value) {
                                 print("\(self.nowTrainingCount)       \(self.nowSetCount)")
@@ -243,8 +255,6 @@ class TrainingViewModel: ObservableObject {
                                 
                             }
                         }
-                        
-                    case false:
                         break
                         
                     }
@@ -350,13 +360,18 @@ class TrainingViewModel: ObservableObject {
                 if backChange {
                     speeche(text: "次は右です")
                     nowTrainingCount = 0
+                    interbalTime = 10
+                    sensorjudge = false
                     backChange = false
                 } else {
                     speeche(text: "第\(nowSetCount)セット終了")
                     nowSetCount += 1
+                    sensorjudge = false
+                    nowTrainingCount = 0
                     backChange = true
                 }
             } else {
+                nowTrainingCount = 0
                 speeche(text: "第\(nowSetCount)セット終了")
                 nowSetCount += 1
             }
@@ -387,6 +402,7 @@ class TrainingViewModel: ObservableObject {
         self.trainingTimer?.invalidate()
         self.speakTimer?.invalidate()
         self.stopSpeacTimer?.invalidate()
+        self.startTimer?.invalidate()
         nowTrainingCount = Double(trainingMaxCount[trainingIndex!].value)
         nowSetCount = 1
         trainingFinish = true
@@ -426,10 +442,10 @@ class TrainingViewModel: ObservableObject {
                 } else {
                     if !self.speechSynthesizer.isSpeaking{
                         if self.x >=  self.sidePlank.maxRightSensor {
-                            self.adviceSensor(advice: "もう少し腰を下げましょう", sucess: "その位置です")
+                            self.adviceSensor(advice: "もう少し腰を上げましょう", sucess: "その位置です")
                         } else if self.x <= self.sidePlank.minRightSensor {
                             // TODO: 複数対応できるようにadviceとsucessの部分を配列で読ませる
-                            self.adviceSensor(advice: "もう少し腰を上げましょう", sucess: "その位置です")
+                            self.adviceSensor(advice: "もう少し腰を下げましょう", sucess: "その位置です")
                         }
                     }
                 }
@@ -438,21 +454,24 @@ class TrainingViewModel: ObservableObject {
                     switch(self.sensorjudge){
                         
                     case true:
-                        if self.x >= self.nowSensor.minSensor {
-                            self.adviceSensor(advice: "あげてください", sucess: "")
+                        if self.x <= self.nowSensor.maxSensor {
+                            self.adviceSensor(advice: "さげてください", sucess: "")
                             self.sensorjudge = false
-                            print("\(self.nowTrainingCount)")
-                            print("\(self.trainingMaxCount[self.trainingIndex!].value)")
-                            self.nowTrainingCount += 1.0
+                            
                             let index = self.viewModel.todayCount.firstIndex(where: { $0.menuName == self.nowMenu })
                             self.viewModel.todayCount[index!].Count += 1
+                            self.nowTrainingCount += 1.0
+
                         }
                         
                     case false:
-                        if self.x <= self.nowSensor.maxSensor {
-                            self.adviceSensor(advice: "さげてください", sucess: "")
+                        
+                        if self.x >= self.nowSensor.minSensor {
+                            self.adviceSensor(advice: "あげてください", sucess: "")
                             self.sensorjudge = true
-                            
+                            print("\(self.nowTrainingCount)")
+                            print("\(self.trainingMaxCount[self.trainingIndex!].value)")
+                                                        
                             
                         }
                     }
@@ -486,14 +505,15 @@ class TrainingViewModel: ObservableObject {
                         switch(self.sensorjudge){
                             
                         case true:
-                            if self.x <= self.backSquat.minRightSensor {
+                            if self.x >= self.backSquat.maxRightSensor {
+                            
                                 self.adviceSensor(advice: "あげてください", sucess: "")
                                 self.sensorjudge = false
                                 
                             }
                             
                         case false:
-                            if self.x >= self.backSquat.maxRightSensor {
+                            if self.x <= self.backSquat.minRightSensor {
                                 self.adviceSensor(advice: "さげてください", sucess: "")
                                 self.sensorjudge = true
                                 
