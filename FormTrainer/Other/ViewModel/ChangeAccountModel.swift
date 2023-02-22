@@ -18,7 +18,7 @@ class ChangeAccountModel: ObservableObject {
     @Published var pass = ""
     @Published var repass = ""
     
-    @Published var showingAlert = AlertItem(alert: Alert(title: Text("ネットワークが不安定です")))
+    @Published var showingAlert = AlertItem(alert: Alert(title: Text("ネットワーク接続を確認してください")))
     @Published var progress = false
     
     @Published var viewChange = false

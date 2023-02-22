@@ -24,7 +24,7 @@ class SignUpViewModel: ObservableObject {
     @Published var password = ""
     @Published var subPassword = ""
     
-    @Published var showingAlert = AlertItem(alert: Alert(title: Text("アラート１")))    
+    @Published var showingAlert = AlertItem(alert: Alert(title: Text("ネットワーク接続を確認してください")))    
     
     let mailText = "[^a-zA-Z0-9@.-_]"
     let passwordText = "[^a-zA-Z0-9]"
