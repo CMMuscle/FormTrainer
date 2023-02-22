@@ -138,6 +138,7 @@ struct MainDataView: View {
                                     weekCount += 1
                                 }
                             }
+                            .foregroundColor(.white)
                             .padding(EdgeInsets(top: 0, leading: 50, bottom: 0, trailing: 0))
                             Spacer()
                             Text("\(menuViewModel.dayYear(weekCount: weekCount))/\(menuViewModel.datas!.date.week[menuViewModel.datas!.date.week.count - weekCount].menu[0].date)~\(menuViewModel.datas!.date.week[menuViewModel.datas!.date.week.count - weekCount].menu[menuViewModel.datas!.date.week[menuViewModel.datas!.date.week.count - weekCount].menu.count - 1].date)")
@@ -148,6 +149,7 @@ struct MainDataView: View {
                                     weekCount -= 1
                                 }
                             }
+                            .foregroundColor(.white)
                             .padding(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 50))
                         }
                     }
@@ -285,6 +287,9 @@ struct ChartView: View {
                     }
                     
                 }
+                .chartForegroundStyleScale ([
+                    "プランク": .red, "バックスクワット": .yellow, "腹筋": .white, "サイドプランク": .blue, "背筋": .green, "腕立て": .orange
+                        ])
                 .chartPlotStyle { plotContent in
                     plotContent
                         .foregroundColor(.white)
@@ -340,6 +345,9 @@ struct ChartView: View {
                         .background(.gray.opacity(0.4))
                         .border(Color.white, width: 2)
                 }
+                .chartForegroundStyleScale ([
+                    "プランク": .red, "バックスクワット": .yellow, "腹筋": .white, "サイドプランク": .blue, "背筋": .green, "腕立て": .orange
+                        ])
                 .chartXAxis {
                     AxisMarks(values: .automatic) { value in
                         AxisGridLine(centered: true, stroke: StrokeStyle(dash: [2, 2]))
@@ -390,6 +398,9 @@ struct ChartView: View {
                         .background(.gray.opacity(0.4))
                         .border(Color.white, width: 2)
                 }
+                .chartForegroundStyleScale ([
+                    "プランク": .red, "バックスクワット": .yellow, "腹筋": .white, "サイドプランク": .blue, "背筋": .green, "腕立て": .orange
+                        ])
                 .chartXAxis {
                     AxisMarks(values: .automatic) { value in
                         AxisGridLine(centered: true, stroke: StrokeStyle(dash: [2, 2]))

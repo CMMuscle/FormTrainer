@@ -125,7 +125,7 @@ struct UserView: View {
                                             }
                                         
                                     } else {
-                                        if !viewModel.startFirst {
+                                        if !menuViewModel.datas!.startFirst {
                                             Button("写真追加"){
                                                 viewModel.filterImage = false
                                                 viewModel.isShowActionSheet = true
@@ -158,10 +158,8 @@ struct UserView: View {
                                             }
                                         
                                     } else {
-                                        if !viewModel.nowFirst {
-                                            Button("写真追加"){
-                                                viewModel.filterImage = true
-                                                viewModel.isShowActionSheet = true
+                                        if !menuViewModel.datas!.nowFirst {
+                                            Button("写真なし"){
                                             }
                                             .font(.largeTitle)
                                             .foregroundColor(.white)
@@ -226,14 +224,6 @@ struct UserView: View {
                     self.viewModel.nowFilteredImage = image
                 }
             }
-        }
-        .actionSheet(isPresented: $viewModel.isShowActionSheet){
-            actionSheet
-        }
-        .sheet(isPresented: $viewModel.isShowImagePickerView){
-            ImagePicker(isShown: $viewModel.isShowImagePickerView,
-                        image: $viewModel.image,
-                        sourceType: viewModel.selectedSourceType)
         }
         
     }

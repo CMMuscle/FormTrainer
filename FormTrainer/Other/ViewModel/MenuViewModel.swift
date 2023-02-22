@@ -16,11 +16,11 @@ class MenuViewModel: ObservableObject {
     let menu = ["プランク","バックスクワット","腹筋","サイドプランク","背筋","腕立て"]
     
     // "プランク","ブルガリアンスクワット","腹筋","サイドプランク","背筋","腕立て"
-    @Published var setMaxCount = [2, 5, 1, 3, 7, 3]
-    @Published var trainingMaxCount = [20, 10, 1, 10, 10, 10]
+    @Published var setMaxCount = [3, 3, 3, 3, 3, 3]
+    @Published var trainingMaxCount = [60, 10, 10, 60, 10, 10]
     
-    @Published var stringSetCount = ["2","5","1","3","7","3"]
-    @Published var stringTrainingCount = ["10","10","1","10","10","10"]
+    @Published var stringSetCount = ["3","3","3","3","3","3"]
+    @Published var stringTrainingCount = ["60","10","10","60","10","10"]
     
     private var db = Firestore.firestore()
     
@@ -30,8 +30,6 @@ class MenuViewModel: ObservableObject {
     
     let screen = UIScreen.main.bounds
     
-    // 各itemの幅
-    private let ITEM_PADDING: CGFloat = 20
     
     @Published var flag = false
     
@@ -56,7 +54,7 @@ class MenuViewModel: ObservableObject {
     @Published var user: User!
     @Published var weight: Weight!
     @Published var fat: PeopleFat!
-    @Published var subMenu = [Menus]()
+    @Published var subMenu = [[Menus]]()
     @Published var stats = [Stats]()
     
     @Published var firstComing = false
@@ -129,9 +127,6 @@ class MenuViewModel: ObservableObject {
         dayMissonSelect()
         weekMissionSelect()
         
-        
-        
-        
     }
     
     func statusAdd(weight: Double, fat: Double) {
@@ -151,7 +146,7 @@ class MenuViewModel: ObservableObject {
         let day = Calendar.current.component(.day, from: Date())
         if day != self.day {
             datas!.nowCount = [NowCount(id: UUID(), menuName: "プランク", Count: 0),NowCount(id: UUID(), menuName: "バックスクワット", Count: 0),NowCount(id: UUID(), menuName: "腹筋", Count: 0),NowCount(id: UUID(), menuName: "サイドプランク", Count: 0),NowCount(id: UUID(), menuName: "背筋", Count: 0),NowCount(id: UUID(), menuName: "腕立て", Count: 0)]
-            addMovie(datas!)
+            add(datas!)
             todayCount = datas!.nowCount
             self.day = day
         } else {
@@ -160,10 +155,15 @@ class MenuViewModel: ObservableObject {
     }
     
     func subMenuLoad(menu: String) {
-        subMenu = datas!.date.week[datas!.date.week.count - 1].menu.filter{ $0.menuName == menu }
-        stats = datas!.date.stats.filter{ $0.menu == menu }
-        isChanged = true
-        print("aaa\(stats)")
+        subMenu = [[Menus]]()
+        for i in 0..<datas!.date.week.count {
+           
+            subMenu.append(datas!.date.week[i].menu.filter{ $0.menuName == menu })
+            stats = datas!.date.stats.filter{ $0.menu == menu }
+            isChanged = true
+            print("bbb\(datas!.date.week.count)\(subMenu)")
+            print("aaa\(stats)")
+        }
     }
     
     func loadData() {
@@ -181,7 +181,7 @@ class MenuViewModel: ObservableObject {
                 subscribe()
                 datas!.date.week[datas!.date.week.count - 1].menu[index!] = (Menus(id: UUID(), menuName: todayCount[i].menuName, count: todayCount[i].Count, date: today()))
                 datas!.nowCount = todayCount
-                addMovie(datas!)
+                add(datas!)
             }
         }
     }
@@ -245,9 +245,9 @@ class MenuViewModel: ObservableObject {
             }
             print("kairos\(week)")
             
-            datas = MuscleData(id: UUID(), date: Dates(id: UUID(), week: week, stats: datas!.date.stats), first: datas!.first, rank: datas!.rank, weekDatas: datas!.weekDatas, firstDate: datas!.firstDate, nowCount: datas!.nowCount)
+            datas = MuscleData(id: UUID(), date: Dates(id: UUID(), week: week, stats: datas!.date.stats), startFirst: datas!.startFirst, nowFirst: datas!.nowFirst, rank: datas!.rank, weekDatas: datas!.weekDatas, firstDate: datas!.firstDate, nowCount: datas!.nowCount)
             
-            addMovie(datas!)
+            add(datas!)
             
             datas!.weekDatas.append(Calendar(identifier: .japanese).nextDate(after: Date(), matching: .init(weekday: 7), matchingPolicy: .nextTime, direction: .forward)!)
         }
@@ -256,7 +256,6 @@ class MenuViewModel: ObservableObject {
     func dayMissonSelect() {
         let day = Calendar.current.component(.day, from: Date())
         if day != self.day || firstMission {
-            
             while dayMenuNum.count < 3 {
                 let randomNumber = Int.random(in: 0...5)
                 if !dayMenuNum.contains(randomNumber) {
@@ -349,7 +348,7 @@ class MenuViewModel: ObservableObject {
                         datas!.date.stats[i].rank += 1
                         datas!.date.stats[i].goal += datas!.date.stats[i].goal
                     } else {
-                        addMovie(datas!)
+                        add(datas!)
                         subscribe()
                         return
                     }
@@ -429,7 +428,7 @@ class MenuViewModel: ObservableObject {
         
     }
     
-    func addMovie(_ main: MuscleData) {
+    func add(_ main: MuscleData) {
         guard let uid = Auth.auth().currentUser?.uid else {
             return print("ログインできてません")
         }
@@ -442,7 +441,6 @@ class MenuViewModel: ObservableObject {
         }
     }
     
-    // トレーニング設定を保存
     func saveCount() {
         for i in 0..<menu.count {
             setMaxCount[i] = Int(stringSetCount[i]) ?? 3
@@ -450,7 +448,6 @@ class MenuViewModel: ObservableObject {
         }
     }
     
-    // navigationbarの色変更
     func setupNavigationBar() {
         let appearance = UINavigationBarAppearance()
         appearance.configureWithOpaqueBackground()
@@ -461,18 +458,11 @@ class MenuViewModel: ObservableObject {
         UINavigationBar.appearance().scrollEdgeAppearance = appearance
     }
     
-    // 擬似無限スクロール用の配列を生成
     private func createInfinityArray(_ targetArray: [String]) -> [String] {
         if targetArray.count > 1 {
             var result: [String] = []
-            
-            // 最後の2要素
             result += targetArray.suffix(2)
-            
-            // 本来の配列
             result += targetArray
-            
-            // 最初の2要素
             result += targetArray.prefix(2).map { $0 }
             
             return result
@@ -480,53 +470,18 @@ class MenuViewModel: ObservableObject {
             return targetArray
         }
     }
-}
-
-// 各種メソッド
-extension MenuViewModel{
-    
-    // itemPadding
-    func carouselItemPadding() -> CGFloat {
-        return ITEM_PADDING
-    }
-    
-    // カルーセル各要素のWidth
-    func carouselItemWidth() -> CGFloat {
-        return UIScreen.main.bounds.width * 0.84
-    }
-    
-    func carouselItemHeight() -> CGFloat {
-        return UIScreen.main.bounds.height * 0.39
-    }
-    
-    // itemを中央に配置するためにカルーセルのleading paddingを返す
-    func carouselLeadingPadding(index: Int, bodyView: GeometryProxy) -> CGFloat {
-        return index == 0 ? bodyView.size.width * 0.081 : 0
-    }
-    
-    // カルーセルのOffsetのX値を返す
-    func carouselOffsetX(bodyView: GeometryProxy) -> CGFloat {
-        return -CGFloat(self.currentIndex) * (UIScreen.main.bounds.width * 0.84 + self.ITEM_PADDING)
-    }
-    
-    // ドラッグ操作
-    func onChangedDragGesture() {
-        // ドラッグ時にはアニメーション有効
-        if self.isOffsetAnimation == false {
-            self.isOffsetAnimation = true
+    func drag() {
+        if isOffsetAnimation == false {
+            isOffsetAnimation = true
         }
     }
     
-    // ドラッグ操作によるcurrentIndexの操作
     func updateCurrentIndex(dragGestureValue: _ChangedGesture<GestureStateGesture<DragGesture, CGFloat>>.Value, bodyView: GeometryProxy) {
         var newIndex = currentIndex
         
-        // ドラッグ幅からページングを判定
         if abs(dragGestureValue.translation.width) > bodyView.size.width * 0.3 {
             newIndex = dragGestureValue.translation.width > 0 ? self.currentIndex - 1 : self.currentIndex + 1
         }
-        
-        // 最小ページ、最大ページを超えないようチェック
         if newIndex < 0 {
             newIndex = 0
         } else if newIndex > (self.infinityArray.count - 1) {
@@ -538,4 +493,5 @@ extension MenuViewModel{
     }
 }
 
+    
 

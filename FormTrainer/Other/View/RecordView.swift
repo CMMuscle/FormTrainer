@@ -212,8 +212,8 @@ struct RecordView: View {
                                 if weightRecord != "" || fatRecord != "" {
                                     viewModel.UploadImage(menuViewModel: menuViewModel)
                                     menuViewModel.statusAdd(weight: Double(weightRecord)!, fat: Double(fatRecord)!)
-                                    viewModel.startFirst = true
-                                    viewModel.nowFirst = true
+                                    menuViewModel.datas!.startFirst = true
+                                    menuViewModel.datas!.nowFirst = true
                                     showingView = false
                                 } else if viewModel.nowFilteredImage == nil {
                                     DispatchQueue.main.asyncAfter ( deadline: DispatchTime.now() + 0.1) {
@@ -270,7 +270,7 @@ struct RecordView: View {
         .ignoresSafeArea(.keyboard, edges: .bottom)
         
         .onAppear {
-            if viewModel.startFirst {
+            if menuViewModel.datas!.startFirst {
                 if let picture = menuViewModel.datas!.date.week[menuViewModel.datas!.date.week.count - 1].user.pictureData.startDownloadURL {
                     print("ytfkugilhoj;")
                     viewModel.downloadImageAsync(url: picture) { image in

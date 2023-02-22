@@ -40,9 +40,6 @@ final class FilterContentViewModel: NSObject, ObservableObject {
     // アラートを表示するためのフラグ
     @Published var isShowAlert = false
     
-    @AppStorage("startFirst") var startFirst = false
-    @AppStorage("nowFirst") var nowFirst = false
-    
     override init() {
         super.init()
         // $をつけている（状態変数として使う→今回はPublished→Publisher）
@@ -79,8 +76,8 @@ final class FilterContentViewModel: NSObject, ObservableObject {
                     if let url = url {
                         self.startImage = url
                         menuViewModel.datas!.date.week[0].user.pictureData.startDownloadURL = self.startImage
-                        menuViewModel.addMovie(menuViewModel.datas!)
-                        self.startFirst = true
+                        menuViewModel.add(menuViewModel.datas!)
+                        menuViewModel.datas!.startFirst = true
                     }
                 }
             }
@@ -100,8 +97,8 @@ final class FilterContentViewModel: NSObject, ObservableObject {
                     if let url = url {
                         self.nowImage = url
                         menuViewModel.datas!.date.week[0].user.pictureData.nowDownloadURL = self.nowImage
-                        menuViewModel.addMovie(menuViewModel.datas!)
-//                        self.nowFirst = true
+                        menuViewModel.add(menuViewModel.datas!)
+                        menuViewModel.datas!.nowFirst = true
                     }
                     print("aaaaaaaa")
                 }
@@ -119,7 +116,6 @@ final class FilterContentViewModel: NSObject, ObservableObject {
     
     func downloadImageAsync(url: URL, completion: @escaping (UIImage?) -> Void) {
         let session = URLSession(configuration: .default)
-        let _ = "3"
         let task = session.dataTask(with: url) { (data, _, _) in
             var image: UIImage?
             if let imageData = data {

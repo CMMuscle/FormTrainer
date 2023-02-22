@@ -65,7 +65,7 @@ struct MenuView: View {
                                     // ブロック背景
                                     RoundedRectangle(cornerRadius: 8)
                                         .fill(Color(red: 0.49, green: 0.49, blue: 0.49))
-                                        .frame(width: menuViewModel.carouselItemWidth(), height: menuViewModel.carouselItemHeight())
+                                        .frame(width: screen.width * 0.84, height: screen.height * 0.39)
                                         .shadow(color: Color.black.opacity(0.1), radius: 10, x: 0, y: 0)
                                     
                                     
@@ -86,6 +86,32 @@ struct MenuView: View {
                                 Spacer()
                                 
                             }
+                            
+//                            Button("aaa") {
+//                                var menu = [Menus]()
+//                                var data = ["2/12","2/13","2/14","2/15","2/16","2/17","2/18"]
+//                                var data1 = menuViewModel.dateFirstFormater()
+//                                for i in 0..<data.count {
+//                                    menu.append(Menus(id: UUID(), menuName: "プランク", count: 0, date: data[i]))
+//                                    menu.append(Menus(id: UUID(), menuName: "バックスクワット", count: 0, date: data[i]))
+//                                    menu.append(Menus(id: UUID(), menuName: "腹筋", count: 0, date: data[i]))
+//                                    menu.append(Menus(id: UUID(), menuName: "サイドプランク", count: 0, date: data[i]))
+//                                    menu.append(Menus(id: UUID(), menuName: "背筋", count: 0, date: data[i]))
+//                                    menu.append(Menus(id: UUID(), menuName: "腕立て", count: 0, date: data[i]))
+//                                }
+//                                menuViewModel.datas!.date.week[0].menu = menu
+//                                menu = [Menus]()
+//                                for i in 0..<data1.count {
+//                                    menu.append(Menus(id: UUID(), menuName: "プランク", count: 0, date: data1[i]))
+//                                    menu.append(Menus(id: UUID(), menuName: "バックスクワット", count: 0, date: data1[i]))
+//                                    menu.append(Menus(id: UUID(), menuName: "腹筋", count: 0, date: data1[i]))
+//                                    menu.append(Menus(id: UUID(), menuName: "サイドプランク", count: 0, date: data1[i]))
+//                                    menu.append(Menus(id: UUID(), menuName: "背筋", count: 0, date: data1[i]))
+//                                    menu.append(Menus(id: UUID(), menuName: "腕立て", count: 0, date: data1[i]))
+//                                }
+//                                menuViewModel.datas!.date.week.append(Week(id: UUID(), user: menuViewModel.datas!.date.week[0].user, menu: menu))
+//                                menuViewModel.add(menuViewModel.datas!)
+//                            }
                             
                             Spacer()
                             
@@ -163,7 +189,7 @@ struct trainingItem: View {
         GeometryReader { bodyView in
             
             // 各ブロックの幅を設定
-            LazyHStack(spacing: menuViewModel.carouselItemPadding()) {
+            LazyHStack(spacing: 20) {
                 
                 // menuViewModel初期化時に用意した配列を使う
                 ForEach(menuViewModel.infinityArray.indices, id: \.self) { index in
@@ -175,13 +201,13 @@ struct trainingItem: View {
                             // ブロック背景
                             RoundedRectangle(cornerRadius: 8)
                                 .fill(Color(red: 0.49, green: 0.49, blue: 0.49))
-                                .frame(width: menuViewModel.carouselItemWidth(), height: menuViewModel.carouselItemHeight())
+                                .frame(width: screen.width * 0.84, height: screen.height * 0.39)
                             
                             // 各筋トレの画像
                             Image(menuViewModel.infinityArray[index])
                                 .resizable()
                                 .aspectRatio(contentMode: .fit)
-                                .frame(width: menuViewModel.carouselItemWidth(), height: screen.height * 0.15)
+                                .frame(width: screen.width * 0.84, height: screen.height * 0.15)
                             // 筋トレ名
                             Text(menuViewModel.infinityArray[index])
                                 .foregroundColor(.white)
@@ -211,7 +237,7 @@ struct trainingItem: View {
                 .offset(x: dragOffset)
                 
                 // カルーセルのOffsetのX値を返す
-                .offset(x: menuViewModel.carouselOffsetX(bodyView: bodyView))
+                .offset(x: -CGFloat(menuViewModel.currentIndex) * (UIScreen.main.bounds.width * 0.84 + 20))
                 
                 // スワイプ時のアニメーション
                 .animation(menuViewModel.dragAnimation, value: dragOffset)
@@ -225,7 +251,7 @@ struct trainingItem: View {
                     
                     // 値が更新された時のアクション
                         .onChanged({ value in
-                            menuViewModel.onChangedDragGesture()
+                            menuViewModel.drag()
                         })
                     
                     // 画面から指を離した時のアクション

@@ -37,7 +37,7 @@ struct SubDataView: View {
                     Image(trainingName)
                         .resizable()
                         .aspectRatio(contentMode: .fit)
-                        .frame(height: screen.height * 0.12)
+                        .frame(height: screen.height * 0.1)
                     
                     
                 }
@@ -70,7 +70,6 @@ struct SubDataView: View {
                                 Rectangle()
                                     .fill(Color(red: 0.85, green: 0.85, blue: 0.85))
                                 
-                                // あとで関数でサイズを調整できるようにする
                                     .frame(width: screen.width * 0.805 * CGFloat((Double(menuViewModel.stats[0].currentData) / Double(menuViewModel.stats[0].goal))) , height: screen.height * 0.02, alignment: .leading)
                                     .padding(EdgeInsets(top: 0, leading: screen.width * 0.1, bottom: 0, trailing: 0))
                                 
@@ -96,15 +95,15 @@ struct SubDataView: View {
                     
                     VStack {
                         
-                        SubChartView(menuViewModel: menuViewModel, mainDataViewModel: mainDataViewModel)
-                            .frame(width: screen.width * 0.7, height: screen.height * 0.35)
+                        SubChartView(menuViewModel: menuViewModel, mainDataViewModel: mainDataViewModel, weekCount: $weekCount)
+                            .frame(width: screen.width * 0.7, height: screen.height * 0.33)
                     }
                 }
                 
                 ZStack {
                     RoundedRectangle(cornerRadius: 28)
                         .fill(Color(red: 0.50, green: 0.50, blue: 0.50))
-                        .frame(width: screen.width * 0.84, height: screen.height * 0.05)
+                        .frame(width: screen.width * 0.84, height: screen.height * 0.03)
                         .padding()
                     
                     HStack {
@@ -114,6 +113,7 @@ struct SubDataView: View {
                                 weekCount += 1
                             }
                         }
+                        .foregroundColor(.white)
                         .padding(EdgeInsets(top: 0, leading: 50, bottom: 0, trailing: 0))
                         Spacer()
                         Text("\(menuViewModel.dayYear(weekCount: weekCount))/\(menuViewModel.datas!.date.week[menuViewModel.datas!.date.week.count - weekCount].menu[0].date)~\(menuViewModel.datas!.date.week[menuViewModel.datas!.date.week.count - weekCount].menu[menuViewModel.datas!.date.week[menuViewModel.datas!.date.week.count - weekCount].menu.count - 1].date)")
@@ -124,6 +124,7 @@ struct SubDataView: View {
                                 weekCount -= 1
                             }
                         }
+                        .foregroundColor(.white)
                         .padding(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 50))
                     }
                 }
@@ -147,13 +148,13 @@ struct SubChartView: View {
     
     let screen = UIScreen.main.bounds
     
-    
+    @Binding var weekCount: Int
     
     var body: some View {
         
         VStack {
             Chart {
-                ForEach(menuViewModel.subMenu) { menu in
+                ForEach(menuViewModel.subMenu[menuViewModel.datas!.date.week.count - weekCount]) { menu in
                     
                     BarMark(x: .value("day", menu.date),
                             y: .value("workout_In_Min", menu.count)
@@ -182,6 +183,9 @@ struct SubChartView: View {
                     }
                 }
             }
+            .chartForegroundStyleScale ([
+                "プランク": .red, "バックスクワット": .yellow, "腹筋": .white, "サイドプランク": .blue, "背筋": .green, "腕立て": .orange
+                    ])
             .chartYAxis {
                 AxisMarks(values: .automatic) { value in
                     AxisGridLine(centered: true, stroke: StrokeStyle(dash: [2, 2]))

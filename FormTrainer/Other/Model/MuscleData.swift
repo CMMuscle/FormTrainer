@@ -12,7 +12,8 @@ import FirebaseFirestore
 struct MuscleData: Codable, Identifiable {
     var id: UUID
     var date: Dates
-    var first: Bool
+    var startFirst: Bool
+    var nowFirst: Bool
     var rank: Rank
     var weekDatas: [Date]
     var firstDate: Date
@@ -43,14 +44,6 @@ struct Week: Codable, Identifiable {
     var id: UUID
     var user: User
     var menu: [Menus]
-}
-
-// サンプルデータ
-struct Daily:Codable, Identifiable {
-    var id: UUID
-    var day: String
-    var workout_In_Min : Int
-    var trainingKind: String
 }
 
 struct PictureData: Codable, Identifiable {

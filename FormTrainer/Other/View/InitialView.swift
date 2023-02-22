@@ -186,7 +186,6 @@ struct InitialView: View {
                                                 }
                                             
                                         } else {
-                                            if !viewModel.startFirst {
                                                 Button("写真追加"){
                                                     focus = false
                                                     viewModel.filterImage = false
@@ -195,13 +194,7 @@ struct InitialView: View {
                                                 .font(.largeTitle)
                                                 .foregroundColor(.white)
                                                 .frame(width: screen.width * 0.34, height: screen.height * 0.32)
-                                            } else {
-                                                ProgressView()
-                                                    .frame(width: screen.width * 0.34, height: screen.height * 0.32)
-                                                    .onTapGesture {
-                                                        focus = false
-                                                    }
-                                            }
+                                            
                                         }
                                         
                                         
@@ -272,7 +265,7 @@ struct InitialView: View {
                                             
                                             
                                             print("3")
-                                            viewModel.startFirst = true
+                                            menuViewModel.datas!.startFirst = true
                                         } else {
                                             showing = AlertItem(alert: Alert(title: Text("不適切な値が入っています")))
                                         }

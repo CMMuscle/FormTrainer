@@ -50,11 +50,12 @@ class InitialViewModel: ObservableObject {
         stats.append(Stats(id: UUID(), menu: "背筋", currentData: 0.0, goal: 2, color: "green",  rank: 1))
         stats.append(Stats(id: UUID(), menu: "腕立て", currentData: 0.0, goal: 2, color: "orange",  rank: 1))
         
-        menuViewModel.datas = MuscleData(id: UUID(), date: Dates(id: UUID(), week: [Week(id: UUID(), user: User(id: UUID(), name: name!, pictureData: PictureData(id: UUID(), startDownloadURL: startImage, nowDownloadURL: nil), weight: weights, peopleFat: fats), menu: menu)], stats: stats), first: false, rank: Rank(id: UUID(), userRank: 1, userRankCount: 0, userRankMaxCount: 2), weekDatas: [Calendar(identifier: .japanese).nextDate(after: Date(), matching: .init(weekday: 7), matchingPolicy: .nextTime, direction: .forward)!], firstDate: Date(), nowCount: [NowCount(id: UUID(), menuName: "プランク", Count: 0),NowCount(id: UUID(), menuName: "バックスクワット", Count: 0),NowCount(id: UUID(), menuName: "腹筋", Count: 0),NowCount(id: UUID(), menuName: "サイドプランク", Count: 0),NowCount(id: UUID(), menuName: "背筋", Count: 0),NowCount(id: UUID(), menuName: "腕立て", Count: 0)])
+        menuViewModel.datas = MuscleData(id: UUID(), date: Dates(id: UUID(), week: [Week(id: UUID(), user: User(id: UUID(), name: name!, pictureData: PictureData(id: UUID(), startDownloadURL: startImage, nowDownloadURL: nil), weight: weights, peopleFat: fats), menu: menu)], stats: stats), startFirst: true ,nowFirst: false, rank: Rank(id: UUID(), userRank: 1, userRankCount: 0, userRankMaxCount: 2), weekDatas: [Calendar(identifier: .japanese).nextDate(after: Date(), matching: .init(weekday: 7), matchingPolicy: .nextTime, direction: .forward)!], firstDate: Date(), nowCount: [NowCount(id: UUID(), menuName: "プランク", Count: 0),NowCount(id: UUID(), menuName: "バックスクワット", Count: 0),NowCount(id: UUID(), menuName: "腹筋", Count: 0),NowCount(id: UUID(), menuName: "サイドプランク", Count: 0),NowCount(id: UUID(), menuName: "背筋", Count: 0),NowCount(id: UUID(), menuName: "腕立て", Count: 0)])
         
-        menuViewModel.addMovie(menuViewModel.datas!)
+        menuViewModel.add(menuViewModel.datas!)
         menuViewModel.subscribe()
         viewModel.UploadImage(menuViewModel: menuViewModel)
+        
     }
 }
 //"プランク","バックスクワット","腹筋","サイドプランク","背筋","腕立て"
